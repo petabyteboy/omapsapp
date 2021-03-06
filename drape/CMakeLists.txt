@@ -178,4 +178,6 @@ append(
 
 omim_add_library(${PROJECT_NAME} ${DRAPE_COMMON_SRC} ${SRC} ${VULKAN_SRC})
 
-omim_add_test_subdirectory(drape_tests)
+if (NOT SKIP_GUI_TESTS)
+  omim_add_test_subdirectory(drape_tests)
+endif()

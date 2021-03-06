@@ -124,7 +124,8 @@ and run
 
 ### Testing
 
-Run tests from the binary directory with `omim/tools/unix/run_tests.sh`.
+Type `make test` to run all tests. Some long-running integration tests are disabled by default.
+Add `-DSKIP_LONG_TESTS=OFF` CMake argument to enable them.
 
 ## Android app
 

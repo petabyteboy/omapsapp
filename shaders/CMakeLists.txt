@@ -150,4 +150,6 @@ if (PLATFORM_IPHONE)
   )
 endif()
 
-omim_add_test_subdirectory(shaders_tests)
+if (NOT SKIP_GUI_TESTS)
+  omim_add_test_subdirectory(shaders_tests)
+endif()

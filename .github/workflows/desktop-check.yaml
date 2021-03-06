@@ -40,13 +40,23 @@ jobs:
           path: ~/.ccache
           key: desktop-cache
 
-      - name: Compile
+      - name: Configure
         shell: bash
         run: |
           export PATH="/usr/lib/ccache:${PATH}"
           ccache -M 4G
-          (mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo && make desktop -j $(($(nproc)*2)))
+          mkdir -p build
+          (cd build && cmake .. \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DSKIP_LONG_TESTS=ON \
+            -DSKIP_GUI_TESTS=ON)
 
-#      - name: Test
-#        shell: bash
-#        run: ./tools/python/run_desktop_tests.py -f build/ -e generator_integration_tests,opening_hours_integration_tests,opening_hours_supported_features_tests,routing_consistency_tests,routing_integration_tests,routing_quality_tests,storage_integration_tests
+      - name: Compile
+        shell: bash
+        working-directory: build
+        run: make -j $(($(nproc)*2)) desktop tests
+
+      - name: Test
+        shell: bash
+        working-directory: build
+        run: make test

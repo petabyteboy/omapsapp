@@ -156,8 +156,27 @@ else()
   endif()
 endif()
 
-if (NOT SKIP_TESTS)
+if (NOT DEFINED SKIP_TESTS)
   set(SKIP_TESTS FALSE)
+endif()
+
+if (SKIP_TESTS)
+  set(SKIP_LONG_TESTS TRUE)
+  set(SKIP_GUI_TESTS TRUE)
+else()
+  if (NOT DEFINED SKIP_GUI_TESTS)
+    set(SKIP_GUI_TESTS FALSE)
+  endif()
+  if (NOT DEFINED SKIP_LONG_TESTS)
+    set(SKIP_LONG_TESTS TRUE)
+  endif()
+  add_custom_target(tests) # see omim_add_test()
+  # The name `test` is reserved for ctest. We use our own test runner instead.
+  cmake_policy(SET CMP0037 NEW)
+  add_custom_target(test
+      DEPENDS tests
+      COMMAND ${PROJECT_SOURCE_DIR}/tools/python/run_desktop_tests.py
+              -f ${PROJECT_BINARY_DIR})
 endif()
 
 if (NOT PYTHON_VERSION)

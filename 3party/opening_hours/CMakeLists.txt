@@ -38,5 +38,7 @@ set(
 add_library(opening_hours ${SRC})
 
 omim_add_test_subdirectory(opening_hours_tests)
-omim_add_test_subdirectory(opening_hours_integration_tests)
-omim_add_test_subdirectory(opening_hours_supported_features_tests)
+if (NOT SKIP_LONG_TESTS)
+  omim_add_test_subdirectory(opening_hours_integration_tests)
+  omim_add_test_subdirectory(opening_hours_supported_features_tests)
+endif()
