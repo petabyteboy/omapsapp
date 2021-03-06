@@ -19,8 +19,6 @@ import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.downloader.CountryItem;
 import com.mapswithme.maps.downloader.MapManager;
 import com.mapswithme.maps.editor.Editor;
-import com.mapswithme.maps.geofence.GeofenceRegistry;
-import com.mapswithme.maps.geofence.GeofenceRegistryImpl;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.location.TrackRecorder;
 import com.mapswithme.maps.maplayer.guides.GuidesManager;
@@ -84,9 +82,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
   private final MapManager.StorageCallback mStorageCallbacks = new StorageCallbackImpl();
   @SuppressWarnings("NullableProblems")
   @NonNull
-  private AppBackgroundTracker.OnTransitionListener mBackgroundListener;
-  @SuppressWarnings("NullableProblems")
-  @NonNull
   private ExternalLibrariesMediator mMediator;
   @SuppressWarnings("NullableProblems")
   @NonNull
@@ -94,9 +89,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
   @SuppressWarnings("NullableProblems")
   @NonNull
   private MediaPlayerWrapper mPlayer;
-  @SuppressWarnings("NullableProblems")
-  @NonNull
-  private GeofenceRegistry mGeofenceRegistry;
   private boolean mFirstLaunch;
 
   @NonNull
@@ -149,7 +141,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
     super.onCreate();
     LoggerFactory.INSTANCE.initialize(this);
     mLogger = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
-    mBackgroundListener = new AppBaseTransitionListener(this);
     getLogger().d(TAG, "Application is created");
     mMainLoopHandler = new Handler(getMainLooper());
     mMediator = new ExternalLibrariesMediator(this);
@@ -170,7 +161,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
 
     mPurchaseOperationObservable = new PurchaseOperationObservable();
     mPlayer = new MediaPlayerWrapper(this);
-    mGeofenceRegistry = new GeofenceRegistryImpl(this);
     WebView.setWebContentsDebuggingEnabled(Utils.isDebugOrBeta());
   }
 
@@ -224,7 +214,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
 
     Config.setStatisticsEnabled(SharedPropertiesUtils.isStatisticsEnabled(this));
 
-    mBackgroundTracker.addListener(mBackgroundListener);
     Editor.init(this);
     UGC.init(this);
     mPlatformInitialized = true;
@@ -338,12 +327,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
   public MediaPlayerWrapper getMediaPlayer()
   {
     return mPlayer;
-  }
-
-  @NonNull
-  public GeofenceRegistry getGeofenceRegistry()
-  {
-    return mGeofenceRegistry;
   }
 
   private native void nativeInitPlatform(String apkPath, String storagePath, String privatePath,
