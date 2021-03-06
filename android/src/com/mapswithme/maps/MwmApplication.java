@@ -9,7 +9,6 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
-import com.mapswithme.maps.analytics.ExternalLibrariesMediator;
 import com.mapswithme.maps.background.AppBackgroundTracker;
 import com.mapswithme.maps.background.NotificationChannelFactory;
 import com.mapswithme.maps.background.NotificationChannelProvider;
@@ -82,9 +81,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
   private final MapManager.StorageCallback mStorageCallbacks = new StorageCallbackImpl();
   @SuppressWarnings("NullableProblems")
   @NonNull
-  private ExternalLibrariesMediator mMediator;
-  @SuppressWarnings("NullableProblems")
-  @NonNull
   private PurchaseOperationObservable mPurchaseOperationObservable;
   @SuppressWarnings("NullableProblems")
   @NonNull
@@ -143,11 +139,9 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
     mLogger = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
     getLogger().d(TAG, "Application is created");
     mMainLoopHandler = new Handler(getMainLooper());
-    mMediator = new ExternalLibrariesMediator(this);
     Statistics.INSTANCE.initialize(this);
     ConnectionState.INSTANCE.initialize(this);
     CrashlyticsUtils.INSTANCE.initialize(this);
-    Statistics.INSTANCE.setMediator(mMediator);
     
     initNotificationChannels();
 
@@ -283,12 +277,6 @@ public class MwmApplication extends Application implements AppBackgroundTracker.
   static
   {
     System.loadLibrary("mapswithme");
-  }
-
-  @NonNull
-  public ExternalLibrariesMediator getMediator()
-  {
-    return mMediator;
   }
 
   @NonNull

@@ -15,7 +15,6 @@ import com.android.billingclient.api.BillingClient;
 import com.mapswithme.maps.BuildConfig;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.PrivateVariables;
-import com.mapswithme.maps.analytics.ExternalLibrariesMediator;
 import com.mapswithme.maps.api.ParsedMwmRequest;
 import com.mapswithme.maps.base.Initializable;
 import com.mapswithme.maps.bookmarks.data.BookmarkCategory;
@@ -895,15 +894,6 @@ public enum Statistics implements Initializable<Context>
     // No op.
   }
 
-  @SuppressWarnings("NullableProblems")
-  @NonNull
-  private ExternalLibrariesMediator mMediator;
-
-  public void setMediator(@NonNull ExternalLibrariesMediator mediator)
-  {
-    mMediator = mediator;
-  }
-
   private void configure(Context context)
   {
     // At the moment, need to always initialize engine for correct JNI http part reusing.
@@ -923,7 +913,7 @@ public enum Statistics implements Initializable<Context>
   {
     if (mEnabled)
       org.alohalytics.Statistics.logEvent(name, channel);
-    mMediator.getEventLogger().logEvent(name, Collections.emptyMap());
+    //mMediator.getEventLogger().logEvent(name, Collections.emptyMap());
   }
 
   public void trackEvent(@NonNull String name, @NonNull Map<String, String> params)
@@ -937,7 +927,7 @@ public enum Statistics implements Initializable<Context>
     if (mEnabled)
       org.alohalytics.Statistics.logEvent(name, params, channel);
 
-    mMediator.getEventLogger().logEvent(name, params);
+    //mMediator.getEventLogger().logEvent(name, params);
   }
 
   public void trackEvent(@NonNull String name, @Nullable Location location,
@@ -961,7 +951,7 @@ public enum Statistics implements Initializable<Context>
     if (mEnabled)
       org.alohalytics.Statistics.logEvent(name, eventDictionary.toArray(new String[0]), location, channel);
 
-    mMediator.getEventLogger().logEvent(name, params);
+    //mMediator.getEventLogger().logEvent(name, params);
   }
 
   public void trackEvent(@NonNull String name, @NonNull ParameterBuilder builder)
@@ -982,7 +972,7 @@ public enum Statistics implements Initializable<Context>
       org.alohalytics.Statistics.onStart(activity);
     }
 
-    mMediator.getEventLogger().startActivity(activity);
+    //mMediator.getEventLogger().startActivity(activity);
   }
 
   public void stopActivity(Activity activity)
@@ -991,7 +981,7 @@ public enum Statistics implements Initializable<Context>
     {
       org.alohalytics.Statistics.onStop(activity);
     }
-    mMediator.getEventLogger().stopActivity(activity);
+    //mMediator.getEventLogger().stopActivity(activity);
   }
 
   public void setStatEnabled(@NonNull Context context, boolean isEnabled)
