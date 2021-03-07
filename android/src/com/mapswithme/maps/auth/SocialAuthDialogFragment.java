@@ -16,11 +16,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.mapswithme.maps.Framework;
-import com.mapswithme.maps.PrivateVariables;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.base.BaseMwmDialogFragment;
 import com.mapswithme.util.UiUtils;
@@ -36,12 +32,9 @@ public class SocialAuthDialogFragment extends BaseMwmDialogFragment
 {
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
   private static final String TAG = SocialAuthDialogFragment.class.getSimpleName();
-  @SuppressWarnings("NullableProblems")
-  @NonNull
-  private GoogleSignInClient mGoogleSignInClient;
   @NonNull
   private final List<TokenHandler> mTokenHandlers = Arrays.asList(
-      new GoogleTokenHandler(), new PhoneTokenHandler()
+      new PhoneTokenHandler()
   );
   @Nullable
   private TokenHandler mCurrentTokenHandler;
@@ -52,18 +45,7 @@ public class SocialAuthDialogFragment extends BaseMwmDialogFragment
     trackStatsIfArgsExist(Statistics.EventName.AUTH_START);
   };
   @NonNull
-  private final View.OnClickListener mGoogleClickListener = new View.OnClickListener()
-  {
-    @Override
-    public void onClick(View v)
-    {
-      Intent intent = mGoogleSignInClient.getSignInIntent();
-      startActivityForResult(intent, Constants.REQ_CODE_GOOGLE_SIGN_IN);
-      trackStatsIfArgsExist(Statistics.EventName.AUTH_START);
-    }
-  };
   @SuppressWarnings("NullableProblems")
-  @NonNull
   private CheckBox mPrivacyPolicyCheck;
   @SuppressWarnings("NullableProblems")
   @NonNull
@@ -88,11 +70,6 @@ public class SocialAuthDialogFragment extends BaseMwmDialogFragment
   {
     super.onCreate(savedInstanceState);
     setTargetCallback();
-    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(PrivateVariables.googleWebClientId())
-        .requestEmail()
-        .build();
-    mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
   }
 
   private void trackStatsIfArgsExist(@NonNull String action)
@@ -124,20 +101,19 @@ public class SocialAuthDialogFragment extends BaseMwmDialogFragment
   {
     View view = inflater.inflate(R.layout.fragment_auth_passport_dialog, container, false);
 
-    setLoginButton(view, R.id.google_button, mGoogleClickListener);
     setLoginButton(view, R.id.phone_button, mPhoneClickListener);
 
     mPromoCheck = view.findViewById(R.id.newsCheck);
     mPrivacyPolicyCheck = view.findViewById(R.id.privacyPolicyCheck);
     mPrivacyPolicyCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
       setButtonAvailability(view, isChecked && mTermOfUseCheck.isChecked(),
-                            R.id.google_button, R.id.phone_button);
+                            R.id.phone_button);
     });
 
     mTermOfUseCheck = view.findViewById(R.id.termOfUseCheck);
     mTermOfUseCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
       setButtonAvailability(view, isChecked && mPrivacyPolicyCheck.isChecked(),
-                            R.id.google_button, R.id.phone_button);
+                            R.id.phone_button);
     });
 
     UiUtils.linkifyView(view, R.id.privacyPolicyLink, R.string.sign_agree_pp_gdpr,
@@ -145,8 +121,6 @@ public class SocialAuthDialogFragment extends BaseMwmDialogFragment
 
     UiUtils.linkifyView(view, R.id.termOfUseLink, R.string.sign_agree_tof_gdpr,
                         Framework.nativeGetTermsOfUseLink());
-
-    setButtonAvailability(view, false, R.id.google_button, R.id.phone_button);
 
     trackStatsIfArgsExist(Statistics.EventName.AUTH_SHOWN);
     return view;
