@@ -180,7 +180,7 @@ android {
       if (project.hasProperty('pch')) pchFlag = 'ON'
 
       cmake {
-        version "3.8.0+"
+        version "3.18.1+"
         cppFlags '-fexceptions', '-frtti', '-std=c++17'
         cFlags '-ffunction-sections', '-fdata-sections',
                '-Wno-extern-c-compat'
@@ -450,7 +450,7 @@ android {
 
   externalNativeBuild {
     cmake {
-      version "3.8.0+"
+      version "3.18.1+"
       buildStagingDirectory "./nativeOutputs"
       path "../CMakeLists.txt"
     }
