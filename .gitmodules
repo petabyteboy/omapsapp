@@ -26,7 +26,7 @@
   ignore = dirty
 [submodule "3party/just_gtfs"]
   path = 3party/just_gtfs
-  url = https://github.com/omapsapp/just_gtfs.git
+	url = https://github.com/mapsme/just_gtfs/
   branch = for-usage-as-submodule
 [submodule "3party/expat"]
   path = 3party/expat
